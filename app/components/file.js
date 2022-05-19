@@ -9,10 +9,12 @@ const Button = (props) => (
         </View>
     </TouchableOpacity>
 )
-const NOTE = ({ route, navigation }) => {
+const NOTE = (props) => {
+    console.log(props.route.path);
+
     const [notes, setnotes] = useState("");
     const _read = (path) => {
-        RNFS.readFile(file.path, 'utf8')
+        RNFS.readFile( path, 'utf8')
             .then(content => {
                 setnotes(content);
             })
@@ -21,7 +23,7 @@ const NOTE = ({ route, navigation }) => {
         RNFS.writeFile(path, notes, 'utf8')
             .then(() => console.log(path + " was created!"))
     }
-    _read(route.path);
+    _read(props.route.path);
     return (
         <View>
             <TextInput
@@ -32,12 +34,12 @@ const NOTE = ({ route, navigation }) => {
                 multiline={true}
             />
             <Button
-                onPress={() => { _update(notes, route.path) }}
+                onPress={() => { _update(notes, props.route.path) }}
                 content="save"
             />
             <Button
                 onPress={() => {
-                    navigation.navigate("Inner")
+                    props.navigation.navigate("Inner")
                 }}
                 content="press to read"
             />
