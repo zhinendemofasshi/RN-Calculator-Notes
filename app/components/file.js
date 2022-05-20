@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet,  Alert } from 'react-native';
+import { 
+    View,
+    Text, 
+    TextInput, 
+    StyleSheet,  
+    Alert,
+    TouchableOpacity,
+} from 'react-native';
 import RNFS from "react-native-fs";
 const Button = (props) => (
     <TouchableOpacity
@@ -10,8 +17,8 @@ const Button = (props) => (
     </TouchableOpacity>
 )
 const NOTE = (props) => {
-    console.log(props.route.path);
-
+    const {path} = props.route.params;
+    console.log("path of now:" + path);
     const [notes, setnotes] = useState("");
     const _read = (path) => {
         RNFS.readFile( path, 'utf8')
@@ -21,33 +28,40 @@ const NOTE = (props) => {
     }
     const _update = (notes, path) => {
         RNFS.writeFile(path, notes, 'utf8')
-            .then(() => console.log(path + " was created!"))
+            .then(() => console.log("update it !!"))
     }
-    _read(props.route.path);
+    _read(path);
     return (
         <View>
             <TextInput
                 style={styles.input}
                 onChangeText={notes => setnotes(notes)}
-                value={notes}
+                value={{notes}}
                 placeholder="Write anything you'd like to note."
                 multiline={true}
             />
             <Button
-                onPress={() => { _update(notes, props.route.path) }}
+                onPress={() => { _update(notes, path) }}
                 content="save"
             />
             <Button
                 onPress={() => {
                     props.navigation.navigate("Inner")
                 }}
-                content="press to read"
+                content="Back"
             />
         </View>
 
     );
 }
 const styles = StyleSheet.create({
+    BackButton :{
+        height:70,
+        width:90,
+    },
+    ButtonText:{
+        fontSize:50,
+    },
     input: {
         height: 200,
         width: 400,
