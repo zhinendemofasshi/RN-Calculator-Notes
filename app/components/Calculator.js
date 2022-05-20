@@ -5,6 +5,7 @@ import {
     View,
     TouchableOpacity,
 } from 'react-native';
+import { StackNavigator } from 'react-navigation';
 const Button = (props) => (
     <TouchableOpacity
         onPress={props.onPress}>
@@ -13,7 +14,7 @@ const Button = (props) => (
         </View>
     </TouchableOpacity>
 )
-class App2 extends Component {
+class App2 extends React.Component {
     constructor(props) {
         super(props);
         this.onPress = this.onPress.bind(this);
@@ -21,7 +22,9 @@ class App2 extends Component {
             fomula: "",
             performan:"",
             ans: "",
+            code:"6666",   
         }
+        // const {navigate}  = this.props.navigation;
     }
     onPress(op, op2) {
         let tempt = this.state.performan;
@@ -36,25 +39,32 @@ class App2 extends Component {
     render() {
         return (
             <View style={styles.interface}>
-                <Text style={styles.inputcontainer}>
+                <View style={styles.inputcontainer}>
+                    <Text style={styles.InputText}>
+                        计算器
+                    </Text>
+                <Text style={styles.InputText}>
                     {this.state.performan}
                 </Text>
+                </View>
                 {/* <Text style={styles.inputcontainer}>
                     {this.state.fomula}
 
                 </Text> */}
-                <Text style={styles.OutputContainer}>
+                <View style={styles.OutputContainer}>
+                <Text style={styles.OutputText}>
                     {this.state.ans}
                 </Text>
+                </View>
                 <View style={styles.RowElement}>
                     <Button
-                        op={"C"}
+                        op={"AC"}
                         style={styles.ButtonContainer}
                         onPress={() => {
                             this.setState({
                                 fomula:"",
                                 performan:"",
-                                ans:"", 
+                                ans:"",
                             })
                         }}
                     />
@@ -177,18 +187,28 @@ class App2 extends Component {
                                 // fomula:"",
                                 // performan:"",
                             })
+                            // console.log(tempt);
+                            if(tempt.toString() === this.state.code){
+                                console.log("get code!!");
+                                return this.props.navigation.navigate("Inner");
+                                // this.props.navigation.navigate("Inner");
+                                
+                            }
                         }}
+                        // onPress={() => 
+                        //          this.props.navigation.navigate("Inner")
+                        //       }
                     />
                     <Button
                         op={"del"}
                         style={styles.ButtonContainer}
                         onPress={() => {
-                            
+
                             let tempt = this.state.fomula;
                             let tempt2 = this.state.performan;
                             if(tempt[0] === '-' && tempt[1] === '(' && tempt[tempt.length - 1] === ')'){
                                 tempt = tempt.slice(2, -1);
-                                tempt2 = tempt2.slice(2, -1); 
+                                tempt2 = tempt2.slice(2, -1);
                             }
                             else {
                                 tempt = tempt.slice(0, -1);
@@ -209,22 +229,36 @@ const styles = StyleSheet.create({
     interface: {
         flexDirection: "column",
         flex: 1,
+        backgroundColor:"gainsboro",
+        justifyContent:"center",
     },
     inputcontainer: {
-        height: 50,
-        // backgroundColor: "blue",
+        height: 40,
+         backgroundColor: "white",
+         borderColor:'black',
         color: "black",
-        fontSize: 40,
+        alignItems:"flex-end",
         flex: 2,
+        borderWidth:1,
+        borderRadius:20,
+        flexDirection:"column",
     },
     OutputContainer: {
         flex: 1,
         // backgroundColor: "green",
         color: "black",
+        backgroundColor: "white",
+        borderColor:'black',
+        alignItems:"flex-end",
         fontSize: 30,
+        borderWidth:1,
+        borderRadius:20,
     },
     ButtonContainer: {
-        backgroundColor: 'black',
+        backgroundColor: 'white',
+        borderRadius:20,
+        borderWidth:1,
+        borderColor:'black',
         padding: 1,
         width: 90,
         height: 70,
@@ -232,12 +266,22 @@ const styles = StyleSheet.create({
     },
     ButtonText: {
         fontSize: 50,
-        color: "white",
+        color: "black",
         textAlign: "center",
     },
     RowElement: {
         flexDirection: "row",
+        justifyContent: "space-between",
+        
         flex: 1,
     },
+    InputText:{
+        fontSize:60,
+        color: "black",
+    },
+    OutputText:{
+        fontSize:80,
+        color: "black",
+    }
 });
 export default App2;
