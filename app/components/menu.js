@@ -4,12 +4,13 @@ import {
     Text,
     TextInput,
     StyleSheet,
-    Alert,
     FlatList,
     TouchableOpacity,
+    Dimensions,
 } from 'react-native';
 import RNFS from "react-native-fs";
-
+const Button_width = Dimensions.get('window').width /2; 
+const Item_height = Dimensions.get('window').height / 12;
 const _read = () => {
     RNFS.readDir(RNFS.DocumentDirectoryPath)
         .then((result) => {
@@ -62,47 +63,47 @@ const Menu = ({ navigation }) => {
         //the function will be called when we need to 
         //create a item and turn to the page of diary content
         let path_cur = _create(num), x = num + 1;
-        let tempt = item;
-        tempt.push(Get_item(path_cur, num.toString()));
+        let tempt = item, target = path_cur;
+        tempt.push(target);
         setitem(tempt);//append a new item
         setnum(x);//update the num
+        // console.log(item[0].ad);
+
         navigation.navigate("Diary", {
             path: path_cur,
         })//go to the content page
     }
-
-
     const renderItem = ({ item, index }) => (
         //will be rendered by flatlist conponent
         <ListRowElement
             onPress={() => {
-                let path_cur = item[index].path;
+                console.log("Now is reading item:" + item);
+                let path_cur = item;
                 navigation.navigate("Diary", {
                     path: path_cur,
                 })
             }}//click to show the content of the diary
-            // viewstyle = 
-            // textstyle = 
+            viewstyle = {styles.RowItem}
+            textstyle = {styles.ItemText}
             name={index.toString()}
         />
     )
     return (
         <View style={{ flex: 1 }}>
-            <View>
+            <View style={{flexDirection:"row"}}>
                 <Button
                     onPress={() => navigation.navigate('Outer')}
                     content={"<="}
-    
-                // viewstyle =
-                // textstyle = 
+                    viewstyle ={styles.BackButton}
+                    textstyle ={styles.ButtonText} 
                 // back to the calculator page
                 />
 
                 <Button
                     onPress={Create_onPress}
                     content={"+"}
-                // viewstyle =
-                // textstyle = 
+                    viewstyle ={styles.AddButton}
+                    textstyle ={styles.ButtonText} 
                 // create a new diary
                 />
 
@@ -124,7 +125,31 @@ const styles = StyleSheet.create({
         margin: 12,
         borderWidth: 1,
         padding: 0,
-    }
+    },
+    BackButton :{
+        // flex:1,
+        height:70,
+        width:Button_width,
+        // right:0,  
+    },
+    AddButton:{
+        // flex:1,
+        left:Button_width* 4/5,
+        height:70,
+        width:Button_width,
+    },
+    ButtonText:{
+        flex:1,
+        fontSize:Button_width/5,
+    },
+    RowItem:{
+        flex:1,
+        height:Item_height,
+    },
+    ItemText:{
+        fontSize:Item_height * 4/5,
+
+    },
 }
 )
 
