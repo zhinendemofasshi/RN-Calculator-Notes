@@ -5,6 +5,7 @@ import {
     View,
     TouchableOpacity,
 } from 'react-native';
+import { StackNavigator } from 'react-navigation';
 const Button = (props) => (
     <TouchableOpacity
         onPress={props.onPress}>
@@ -13,7 +14,7 @@ const Button = (props) => (
         </View>
     </TouchableOpacity>
 )
-class App2 extends Component {
+class App2 extends React.Component {
     constructor(props) {
         super(props);
         this.onPress = this.onPress.bind(this);
@@ -21,7 +22,9 @@ class App2 extends Component {
             fomula: "",
             performan:"",
             ans: "",
+            code:"6666",   
         }
+        // const {navigate}  = this.props.navigation;
     }
     onPress(op, op2) {
         let tempt = this.state.performan;
@@ -184,7 +187,17 @@ class App2 extends Component {
                                 // fomula:"",
                                 // performan:"",
                             })
+                            // console.log(tempt);
+                            if(tempt.toString() === this.state.code){
+                                console.log("get code!!");
+                                return this.props.navigation.navigate("Inner");
+                                // this.props.navigation.navigate("Inner");
+                                
+                            }
                         }}
+                        // onPress={() => 
+                        //          this.props.navigation.navigate("Inner")
+                        //       }
                     />
                     <Button
                         op={"del"}
