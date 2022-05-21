@@ -6,6 +6,9 @@ import {createNativeStackNavigator } from "@react-navigation/native-stack";
 import NOTE from "./app/components/file";
 import App2 from "./app/components/Calculator";
 import Menu from "./app/components/menu";
+import RNFS from "react-native-fs";
+import {useState} from "react";
+
 function OuterScreen({ navigation }) {
     return (
         <App2
@@ -28,6 +31,22 @@ function InnerScreen({ navigation }) {
         />
     );
 }
+function DetailsScreen({ route, navigation }) {
+    const [text, Settext] = useState("")
+    console.log(route.params.path)
+    RNFS.readFile(route.params.path, 'utf8')
+        .then(content => {
+            console.log(content);
+            Settext(content);
+        })
+    return(
+        <View>
+            <Text>This is DetailsScreen.</Text>
+            <Text>{text}</Text>
+        </View>
+
+    )
+}
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -38,6 +57,7 @@ export default function App() {
                 <Stack.Screen name="Outer" component={OuterScreen} />
                 <Stack.Screen name="Inner" component={InnerScreen} />
                 <Stack.Screen name="Diary" component={DiaryScreen} />
+                <Stack.Screen name="Details" component={DetailsScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
