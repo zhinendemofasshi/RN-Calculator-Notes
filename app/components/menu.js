@@ -80,7 +80,7 @@ const Menu = ({ navigation }) => {
             onPress={() => {
                 console.log("Now is reading item:" + item);
                 let path_cur = item;
-                navigation.navigate("Diary", {
+                navigation.navigate("Details", {
                     path: path_cur,
                 })
             }}//click to show the content of the diary
