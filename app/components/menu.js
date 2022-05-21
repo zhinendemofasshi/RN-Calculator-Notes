@@ -2,33 +2,15 @@ import React, { useState } from 'react';
 import {
     View,
     Text,
-    TextInput,
     StyleSheet,
     FlatList,
     TouchableOpacity,
     Dimensions,
 } from 'react-native';
 import RNFS from "react-native-fs";
-const Button_width = Dimensions.get('window').width /2; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const Button_width = Dimensions.get('window').width / 2;
 const Item_height = Dimensions.get('window').height / 12;
-const _read = () => {
-    RNFS.readDir(RNFS.DocumentDirectoryPath)
-        .then((result) => {
-            // result.forEach(file => {
-            if (file.path.endsWith('.txt')) {
-                RNFS.readFile(file.path, 'utf8')
-                    .then(content => console.log(content))
-            }
-            // })
-        })
-}
-const Get_item = (url, n) => {
-    target = {
-        ad: url,
-        name: n,
-    }
-    return target;
-}
 const Button = (props) => (
     <TouchableOpacity
         onPress={props.onPress}>
@@ -47,10 +29,37 @@ const ListRowElement = (props) => {
         />
     )
 }
+
 const Menu = ({ navigation }) => {
     const [item, setitem] = useState([]);
     const [num, setnum] = useState(0);
-
+    for(var i = 0; i < num; i++){
+        getData(i.toString());
+        // console.log(item);
+    }
+    const storeData = async ( key, value) => {
+        try {
+          await AsyncStorage.setItem(key, value)
+        } catch (e) {
+          // saving error
+          console.log("Store Error!!!");
+        }
+      }
+    const getData = async (key) => {
+        try {
+            const value = await AsyncStorage.getItem(key)
+            if (value !== null) {
+                // value previously stored
+                console.log(value);
+                var temp = item;
+                temp.push(value);
+                setitem(temp);
+            }
+        } catch (e) {
+            // error reading value
+            console.log("Read Error!!");
+        }
+    }
     const _create = (num) => {
         //according to the num to create a txt file and return the created path 
         RNFS.mkdir(RNFS.DocumentDirectoryPath + "/mydata");
@@ -65,6 +74,8 @@ const Menu = ({ navigation }) => {
         let path_cur = _create(num), x = num + 1;
         let tempt = item, target = path_cur;
         tempt.push(target);
+        storeData(num.toString(), path_cur);
+        storeData("Length", num.toString());
         setitem(tempt);//append a new item
         setnum(x);//update the num
         // console.log(item[0].ad);
@@ -83,27 +94,28 @@ const Menu = ({ navigation }) => {
                     path: path_cur,
                 })
             }}//click to show the content of the diary
-            viewstyle = {styles.RowItem}
-            textstyle = {styles.ItemText}
+            viewstyle={styles.RowItem}
+            textstyle={styles.ItemText}
             name={index.toString()}
         />
     )
+
     return (
         <View style={{ flex: 1 }}>
-            <View style={{flexDirection:"row"}}>
+            <View style={{ flexDirection: "row" }}>
                 <Button
                     onPress={() => navigation.navigate('Outer')}
                     content={"<="}
-                    viewstyle ={styles.BackButton}
-                    textstyle ={styles.ButtonText} 
+                    viewstyle={styles.BackButton}
+                    textstyle={styles.ButtonText}
                 // back to the calculator page
                 />
 
                 <Button
                     onPress={Create_onPress}
                     content={"+"}
-                    viewstyle ={styles.AddButton}
-                    textstyle ={styles.ButtonText} 
+                    viewstyle={styles.AddButton}
+                    textstyle={styles.ButtonText}
                 // create a new diary
                 />
 
@@ -126,28 +138,28 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 0,
     },
-    BackButton :{
+    BackButton: {
         // flex:1,
-        height:70,
-        width:Button_width,
+        height: 70,
+        width: Button_width,
         // right:0,  
     },
-    AddButton:{
+    AddButton: {
         // flex:1,
-        left:Button_width* 4/5,
-        height:70,
-        width:Button_width,
+        left: Button_width * 4 / 5,
+        height: 70,
+        width: Button_width,
     },
-    ButtonText:{
-        flex:1,
-        fontSize:Button_width/5,
+    ButtonText: {
+        flex: 1,
+        fontSize: Button_width / 5,
     },
-    RowItem:{
-        flex:1,
-        height:Item_height,
+    RowItem: {
+        flex: 1,
+        height: Item_height,
     },
-    ItemText:{
-        fontSize:Item_height * 4/5,
+    ItemText: {
+        fontSize: Item_height * 4 / 5,
 
     },
 }
