@@ -25,7 +25,7 @@ class App2 extends React.Component {
             performan: "",
             ans: "",
             code: "6666",
-            num:0,
+            num: 0,
         }
         // const {navigate}  = this.props.navigation;
     }
@@ -54,19 +54,34 @@ class App2 extends React.Component {
             if (value !== null) {
                 // value previously stored
                 console.log("GET NUM: " + value);
-                this.setState({num:parseInt(value)});
+                this.setState({ num: parseInt(value) });
             }
             else {
                 console.log("Num be created by 0!");
-                storeData("NUM","0");
+                storeData("NUM", "0");
             }
         } catch (e) {
             // error reading value
             console.log("getNum Error!!");
         }
     }
-    render() {
 
+    render() {
+        const GoNextPage = async () => {
+            const value = await AsyncStorage.getItem("NUM");
+            var arr = [];
+            console.log("NUM : " + value);
+            for (var i = 0; i < value; i++) {
+                const now = await AsyncStorage.getItem(i.toString());
+                arr.push(now);
+                console.log(now);
+            }
+            this.props.navigation.navigate("Inner", {
+                NUM: parseInt(value),
+                ITEM: arr,
+            });
+            console.log("GET NUM:" + value);
+        }
         return (
             <View style={styles.interface}>
                 <View style={styles.inputcontainer}>
@@ -214,30 +229,19 @@ class App2 extends React.Component {
                             tempt = eval(tempt);
                             this.setState({
                                 ans: tempt,
-                                // fomula:"",
-                                // performan:"",
                             })
-                            // console.log(tempt);
-                            if (this.state.fomula !== "" &&  tempt.toString()=== this.state.code) {
+                            if (this.state.fomula !== "" && tempt.toString() === this.state.code) {
                                 console.log("get code!!");
-                                // this.getNum();
-                                AsyncStorage.getItem("NUM")
-                                .then(value => {
-                                    this.props.navigation.navigate("Inner",{
-                                        NUM: parseInt(value),
-                                    });
-                                    console.log("GET NUM:" + value);
-                                })
-                                // console.log("num(in cal)" + this.state.num);
-                                // this.props.navigation.navigate("Inner",{
-                                //     NUM: this.state.num,
-                                // });
-
+                                GoNextPage();
+                                // AsyncStorage.getItem("NUM")
+                                //     .then(value => {
+                                //         this.props.navigation.navigate("Inner", {
+                                //             NUM: parseInt(value),
+                                //         });
+                                //         console.log("GET NUM:" + value);
+                                //     })
                             }
                         }}
-                    // onPress={() => 
-                    //          this.props.navigation.navigate("Inner")
-                    //       }
                     />
                     <Button
                         op={"del"}
