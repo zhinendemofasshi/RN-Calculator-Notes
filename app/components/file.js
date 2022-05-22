@@ -24,37 +24,16 @@ const NOTE = (props) => {
     const { content } = props.route.params;
     const [notes, setnotes] = useState(content);
     console.log("content:" + notes);
-
-    // console.log("path of now:" + path); for test
-    // const _read = async (path) => {
-    //     RNFS.readFile( path, 'utf8')
-    //         .then(content => {
-    //             console.log(content);
-    //             setnotes(content);
-    //             console.log("notes:" + notes);
-    //         })
-    // }
     const _update = async (notes, path) => {
         RNFS.writeFile(path, notes, 'utf8')
             // .then(notes => console.log(notes))
             .then(() => console.log(path + ": update it !!"))
     }
-    // _read(path);
-    // if(flag){
-    //     _read(path);
-    //     flag = 0;
-    // }
+
     return (
         <View>
             <TextInput
                 style={styles.input}
-                // onChangeText = {
-                //     text => {
-                //         setnotes(text);
-                //         console.log("TEXT: " + text);
-                //         console.log("notes: " + notes);
-                //     }
-                // }
                 value={notes}
                 onChangeText={text => setnotes(text)}
                 placeholder="Write anything you'd like to note."
@@ -64,7 +43,6 @@ const NOTE = (props) => {
                 onPress={() => {
                     console.log("notes:" + notes);
                     _update(notes, path);
-                    // _read(path); decide if the file has been stored
                 }}
                 content="save"
             />
