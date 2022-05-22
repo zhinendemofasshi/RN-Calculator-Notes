@@ -32,6 +32,7 @@ const ListRowElement = (props) => {
 
 function Menu({ route, navigation }) {
     const {NUM} = route.params;
+    const {ITEM} = route.params;
     const storeData = async (key, value) => {
         try {
             await AsyncStorage.setItem(key, value);
@@ -41,51 +42,8 @@ function Menu({ route, navigation }) {
             console.log("StoreItem Error!!!");
         }
     }
-    const getItem = async (key) => {//set item
-        try {
-            const value = await AsyncStorage.getItem(key)
-            if (value !== null) {
-                // value previously stored
-                console.log("Item[i] : " + typeof(value));
-                var temp = item;
-                temp.push(value);
-                setitem(temp);
-            }
-        } catch (e) {
-            // error reading value
-            console.log("getItem Error!!");
-        }
-    }
-    // const getNum = async () => {//return Number
-    //     try {
-    //         const value = await AsyncStorage.getItem("NUM")
-    //         if (value !== null) {
-    //             // value previously stored
-    //             // console.log("NUM: " + value);
-    //             setnum(parseInt(value));
-    //         }
-    //         else {
-    //             console.log("Num be created by 0!");
-    //             storeData("NUM","0");
-    //             setnum(0);
-    //         }
-    //     } catch (e) {
-    //         // error reading value
-    //         console.log("getNum Error!!");
-    //     }
-    // }
-    // storeData("NUM", "0");
-
-    const [item, setitem] = useState([]);
-    // const [num, setnum] = useState(getNum("NUM"));
+    const [item, setitem] = useState(ITEM);
     const [num, setnum] = useState(NUM);
-
-    console.log(NUM , num);
-    // getNum();
-    // for(var i = 0; i < num; i++){
-    //     getItem(i.toString());
-    //     console.log(item);
-    // }
     const _create = (num) => {
         //according to the num to create a txt file and return the created path 
         RNFS.mkdir(RNFS.DocumentDirectoryPath + "/mydata");
