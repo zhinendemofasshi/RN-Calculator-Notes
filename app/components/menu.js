@@ -33,10 +33,11 @@ const ListRowElement = (props) => {
 const Menu = ({ navigation }) => {
     const [item, setitem] = useState([]);
     const [num, setnum] = useState(0);
-    for(var i = 0; i < num; i++){
-        getData(i.toString());
-        // console.log(item);
-    }
+
+    // for(var i = 0; i < num; i++){
+    //     getData(i.toString());
+    //     // console.log(item);
+    // }
     const storeData = async ( key, value) => {
         try {
           await AsyncStorage.setItem(key, value)
@@ -68,20 +69,30 @@ const Menu = ({ navigation }) => {
             .then(() => console.log(path_now + " was created!"));
         return path_now;
     }
+    const read =  (path) => {
+        RNFS.readFile(path, 'utf8')
+            .then((content) => {
+                navigation.navigate("Diary", {
+                path: path,
+                content: content,
+                })
+            })
+    }
     const Create_onPress = () => {
         //the function will be called when we need to 
         //create a item and turn to the page of diary content
         let path_cur = _create(num), x = num + 1;
         let tempt = item, target = path_cur;
         tempt.push(target);
-        storeData(num.toString(), path_cur);
-        storeData("Length", num.toString());
+        // storeData(num.toString(), path_cur);
+        // storeData("Length", num.toString());
         setitem(tempt);//append a new item
         setnum(x);//update the num
         // console.log(item[0].ad);
 
         navigation.navigate("Diary", {
             path: path_cur,
+            content:"",
         })//go to the content page
     }
     const renderItem = ({ item, index }) => (
@@ -90,9 +101,7 @@ const Menu = ({ navigation }) => {
             onPress={() => {
                 console.log("Now is reading item:" + item);
                 let path_cur = item;
-                navigation.navigate("Diary", {
-                    path: path_cur,
-                })
+                read(path_cur);
             }}//click to show the content of the diary
             viewstyle={styles.RowItem}
             textstyle={styles.ItemText}
@@ -157,6 +166,8 @@ const styles = StyleSheet.create({
     RowItem: {
         flex: 1,
         height: Item_height,
+        borderColor:"black",
+
     },
     ItemText: {
         fontSize: Item_height * 4 / 5,
