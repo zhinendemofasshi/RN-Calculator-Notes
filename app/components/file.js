@@ -17,83 +17,66 @@ const Button = (props) => (
     </TouchableOpacity>
 )
 var flag1;
-const NOTE = (props) => {
+class NOTE extends React.Component {
     // console.log(notes); for test
-
-    const {path} = props.route.params;
-    const  {content} = props.route.params;
-    const [notes, setnotes] = useState(content);
-
-    // setnotes(content);
-
-    // console.log("path of now:" + path); for test
-    const _read = async (path) => {
-        RNFS.readFile( path, 'utf8')
-            .then(content => {
-                console.log(content);
-                setnotes(content);
-                console.log("notes:" + notes);
-            })
+    constructor(props) {
+        super(props);
+        const { path } = this.props.route.params;
+        const { content } = this.props.route.params;
+        this.state = {
+            notes:content,
+            path:path,
+        }
+        console.log("content:" + content);
     }
-    const _update = async(notes, path) => {
-        RNFS.writeFile(path, notes, 'utf8')
-            // .then(notes => console.log(notes))
-            .then(() => console.log(path + ": update it !!"))
-    }
-    // _read(path);
-    // if(flag){
-    //     _read(path);
-    //     flag = 0;
-    // }
-    return (
-        <View>
-            <TextInput
-                style={styles.input}
-                // onChangeText = {
-                //     text => {
-                //         setnotes(text);
-                //         console.log("TEXT: " + text);
-                //         console.log("notes: " + notes);
-                //     }
-                // }
-                value={notes}
-                onChangeText = {text => setnotes(text)}
-                placeholder="Write anything you'd like to note."
-                multiline={true}
-            />
-            <Button
-                onPress={() => {
-                    console.log("notes:" + notes);
-                    _update(notes, path);
-                    // _read(path); decide if the file has been stored
-                }}
-                content="save"
-            />
-            <Button
-                onPress={() => {
-                    props.navigation.navigate("Inner")
-                }}
-                content="Back"
-            />
-        </View>
 
-    );
+    render() {
+        const _update = async (notes, path) => {
+            RNFS.writeFile(path, notes, 'utf8')
+                .then(() => console.log(path + ": update it !!"))
+        }
+        return (
+            <View>
+                <TextInput
+                    style={styles.input}
+                    value={this.state.notes}
+                    onChangeText={text => this.setState({notes: text})}
+                    placeholder="Write anything you'd like to note."
+                    multiline={true}
+                />
+                <Button
+                    onPress={() => {
+                        console.log("notes:" + this.state.notes);
+                        _update(this.state.notes, this.state.path);
+                    }}
+                    content="save"
+                />
+                <Button
+                    onPress={() => {
+                        props.navigation.navigate("Inner")
+                    }}
+                    content="Back"
+                />
+            </View>
+
+        );
+    }
 }
 const styles = StyleSheet.create({
-        BackButton :{
-            height:70,
-            width:90,
-        },
-        ButtonText:{
-            fontSize:50,
-        },
-        input: {
-            height: 200,
-            width: 400,
-            margin: 12,
-            borderWidth: 1,
-            padding: 0,
-        }
+    BackButton: {
+        height: 70,
+        width: 90,
+    },
+    ButtonText: {
+        fontSize: 50,
+    },
+    input: {
+        height: 200,
+        width: 400,
+        margin: 12,
+        borderWidth: 1,
+        padding: 0,
     }
+}
 )
 export default NOTE;
