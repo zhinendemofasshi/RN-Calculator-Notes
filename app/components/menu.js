@@ -30,37 +30,62 @@ const ListRowElement = (props) => {
     )
 }
 
-const Menu = ({ navigation }) => {
-    const [item, setitem] = useState([]);
-    const [num, setnum] = useState(0);
-
-    // for(var i = 0; i < num; i++){
-    //     getData(i.toString());
-    //     // console.log(item);
-    // }
-    const storeData = async ( key, value) => {
+function Menu({ route, navigation }) {
+    const {NUM} = route.params;
+    const storeData = async (key, value) => {
         try {
-          await AsyncStorage.setItem(key, value)
+            await AsyncStorage.setItem(key, value);
+            console.log("NOW IS STORING " + key  + " is " + value);
         } catch (e) {
-          // saving error
-          console.log("Store Error!!!");
+            // saving error
+            console.log("StoreItem Error!!!");
         }
-      }
-    const getData = async (key) => {
+    }
+    const getItem = async (key) => {//set item
         try {
             const value = await AsyncStorage.getItem(key)
             if (value !== null) {
                 // value previously stored
-                console.log(value);
+                console.log("Item[i] : " + typeof(value));
                 var temp = item;
                 temp.push(value);
                 setitem(temp);
             }
         } catch (e) {
             // error reading value
-            console.log("Read Error!!");
+            console.log("getItem Error!!");
         }
     }
+    // const getNum = async () => {//return Number
+    //     try {
+    //         const value = await AsyncStorage.getItem("NUM")
+    //         if (value !== null) {
+    //             // value previously stored
+    //             // console.log("NUM: " + value);
+    //             setnum(parseInt(value));
+    //         }
+    //         else {
+    //             console.log("Num be created by 0!");
+    //             storeData("NUM","0");
+    //             setnum(0);
+    //         }
+    //     } catch (e) {
+    //         // error reading value
+    //         console.log("getNum Error!!");
+    //     }
+    // }
+    // storeData("NUM", "0");
+
+    const [item, setitem] = useState([]);
+    // const [num, setnum] = useState(getNum("NUM"));
+    const [num, setnum] = useState(NUM);
+
+    console.log(NUM , num);
+    // getNum();
+    // for(var i = 0; i < num; i++){
+    //     getItem(i.toString());
+    //     console.log(item);
+    // }
     const _create = (num) => {
         //according to the num to create a txt file and return the created path 
         RNFS.mkdir(RNFS.DocumentDirectoryPath + "/mydata");
@@ -69,12 +94,12 @@ const Menu = ({ navigation }) => {
             .then(() => console.log(path_now + " was created!"));
         return path_now;
     }
-    const read =  (path) => {
+    const read = (path) => {
         RNFS.readFile(path, 'utf8')
             .then((content) => {
                 navigation.navigate("Diary", {
-                path: path,
-                content: content,
+                    path: path,
+                    content: content,
                 })
             })
     }
@@ -84,15 +109,16 @@ const Menu = ({ navigation }) => {
         let path_cur = _create(num), x = num + 1;
         let tempt = item, target = path_cur;
         tempt.push(target);
-        // storeData(num.toString(), path_cur);
-        // storeData("Length", num.toString());
-        setitem(tempt);//append a new item
+        storeData(num.toString(), path_cur);
+        storeData("NUM", x.toString());
         setnum(x);//update the num
+        console.log("NUM (set): " + num);
+        setitem(tempt);//append a new item
         // console.log(item[0].ad);
 
         navigation.navigate("Diary", {
             path: path_cur,
-            content:"",
+            content: "",
         })//go to the content page
     }
     const renderItem = ({ item, index }) => (
@@ -166,7 +192,7 @@ const styles = StyleSheet.create({
     RowItem: {
         flex: 1,
         height: Item_height,
-        borderColor:"black",
+        borderColor: "black",
 
     },
     ItemText: {
