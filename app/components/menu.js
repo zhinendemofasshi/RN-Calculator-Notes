@@ -2,34 +2,15 @@ import React, { useState } from 'react';
 import {
     View,
     Text,
-    TextInput,
     StyleSheet,
     FlatList,
     TouchableOpacity,
     Dimensions,
 } from 'react-native';
 import RNFS from "react-native-fs";
-const Button_width = Dimensions.get('window').width /2; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const Button_width = Dimensions.get('window').width / 2;
 const Item_height = Dimensions.get('window').height / 12;
-const _read = () => {
-    RNFS.readDir(RNFS.DocumentDirectoryPath)
-        .then((result) => {
-            // result.forEach(file => {
-            if (file.path.endsWith('.txt')) {
-                RNFS.readFile(file.path, 'utf8')
-                    .then(content => console.log(content))
-            }
-            // })
-        })
-}
-const Get_item = (url, n) => {
-    let target;
-    target = {
-        ad: url,
-        name: n,
-    }
-    return target;
-}
 const Button = (props) => (
     <TouchableOpacity
         onPress={props.onPress}>
@@ -48,10 +29,21 @@ const ListRowElement = (props) => {
         />
     )
 }
-const Menu = ({ navigation }) => {
-    const [item, setitem] = useState([]);
-    const [num, setnum] = useState(0);
 
+function Menu({ route, navigation }) {
+    const {NUM} = route.params;
+    const {ITEM} = route.params;
+    const storeData = async (key, value) => {
+        try {
+            await AsyncStorage.setItem(key, value);
+            console.log("NOW IS STORING " + key  + " is " + value);
+        } catch (e) {
+            // saving error
+            console.log("StoreItem Error!!!");
+        }
+    }
+    const [item, setitem] = useState(ITEM);
+    const [num, setnum] = useState(NUM);
     const _create = (num) => {
         //according to the num to create a txt file and return the created path 
         RNFS.mkdir(RNFS.DocumentDirectoryPath + "/mydata");
@@ -60,18 +52,31 @@ const Menu = ({ navigation }) => {
             .then(() => console.log(path_now + " was created!"));
         return path_now;
     }
+    const read = (path) => {
+        RNFS.readFile(path, 'utf8')
+            .then((content) => {
+                navigation.navigate("Diary", {
+                    path: path,
+                    content: content,
+                })
+            })
+    }
     const Create_onPress = () => {
         //the function will be called when we need to 
         //create a item and turn to the page of diary content
         let path_cur = _create(num), x = num + 1;
         let tempt = item, target = path_cur;
         tempt.push(target);
-        setitem(tempt);//append a new item
+        storeData(num.toString(), path_cur);
+        storeData("NUM", x.toString());
         setnum(x);//update the num
+        console.log("NUM (set): " + num);
+        setitem(tempt);//append a new item
         // console.log(item[0].ad);
 
         navigation.navigate("Diary", {
             path: path_cur,
+            content: "",
         })//go to the content page
     }
     const renderItem = ({ item, index }) => (
@@ -80,31 +85,30 @@ const Menu = ({ navigation }) => {
             onPress={() => {
                 console.log("Now is reading item:" + item);
                 let path_cur = item;
-                navigation.navigate("Details", {
-                    path: path_cur,
-                })
+                read(path_cur);
             }}//click to show the content of the diary
-            viewstyle = {styles.RowItem}
-            textstyle = {styles.ItemText}
+            viewstyle={styles.RowItem}
+            textstyle={styles.ItemText}
             name={index.toString()}
         />
     )
+
     return (
         <View style={{ flex: 1 }}>
-            <View style={{flexDirection:"row"}}>
+            <View style={{ flexDirection: "row" }}>
                 <Button
                     onPress={() => navigation.navigate('Outer')}
                     content={"<="}
-                    viewstyle ={styles.BackButton}
-                    textstyle ={styles.ButtonText} 
+                    viewstyle={styles.BackButton}
+                    textstyle={styles.ButtonText}
                 // back to the calculator page
                 />
 
                 <Button
                     onPress={Create_onPress}
                     content={"+"}
-                    viewstyle ={styles.AddButton}
-                    textstyle ={styles.ButtonText} 
+                    viewstyle={styles.AddButton}
+                    textstyle={styles.ButtonText}
                 // create a new diary
                 />
 
@@ -127,28 +131,30 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 0,
     },
-    BackButton :{
+    BackButton: {
         // flex:1,
-        height:70,
-        width:Button_width,
+        height: 70,
+        width: Button_width,
         // right:0,  
     },
-    AddButton:{
+    AddButton: {
         // flex:1,
-        left:Button_width* 4/5,
-        height:70,
-        width:Button_width,
+        left: Button_width * 4 / 5,
+        height: 70,
+        width: Button_width,
     },
-    ButtonText:{
-        flex:1,
-        fontSize:Button_width/5,
+    ButtonText: {
+        flex: 1,
+        fontSize: Button_width / 5,
     },
-    RowItem:{
-        flex:1,
-        height:Item_height,
+    RowItem: {
+        flex: 1,
+        height: Item_height,
+        borderColor: "black",
+
     },
-    ItemText:{
-        fontSize:Item_height * 4/5,
+    ItemText: {
+        fontSize: Item_height * 4 / 5,
 
     },
 }

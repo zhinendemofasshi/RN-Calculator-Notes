@@ -16,38 +16,26 @@ const Button = (props) => (
         </View>
     </TouchableOpacity>
 )
+var flag1;
 const NOTE = (props) => {
-    const [notes, setnotes] = useState("");
     // console.log(notes); for test
 
-    const {path} = props.route.params;
-
-    // console.log("path of now:" + path); for test
-    const _read = (path) => {
-        RNFS.readFile( path, 'utf8')
-            .then(content => {
-                console.log(content);
-            })
-    }
-    const _update = (notes, path) => {
+    const { path } = props.route.params;
+    const { content } = props.route.params;
+    const [notes, setnotes] = useState(content);
+    console.log("content:" + notes);
+    const _update = async (notes, path) => {
         RNFS.writeFile(path, notes, 'utf8')
             // .then(notes => console.log(notes))
-            .then(() => console.log("update it !!"))
+            .then(() => console.log(path + ": update it !!"))
     }
-    // _read(path);
+
     return (
         <View>
             <TextInput
                 style={styles.input}
-                // onChangeText = {
-                //     text => {
-                //         setnotes(text);
-                //         console.log("TEXT: " + text);
-                //         console.log("notes: " + notes);
-                //     }
-                // }
-                // value={notes}
-                onChangeText = {text => setnotes(text)}
+                value={notes}
+                onChangeText={text => setnotes(text)}
                 placeholder="Write anything you'd like to note."
                 multiline={true}
             />
@@ -55,7 +43,6 @@ const NOTE = (props) => {
                 onPress={() => {
                     console.log("notes:" + notes);
                     _update(notes, path);
-                    // _read(path); decide if the file has been stored
                 }}
                 content="save"
             />
@@ -70,20 +57,20 @@ const NOTE = (props) => {
     );
 }
 const styles = StyleSheet.create({
-        BackButton :{
-            height:70,
-            width:90,
-        },
-        ButtonText:{
-            fontSize:50,
-        },
-        input: {
-            height: 200,
-            width: 400,
-            margin: 12,
-            borderWidth: 1,
-            padding: 0,
-        }
+    BackButton: {
+        height: 70,
+        width: 90,
+    },
+    ButtonText: {
+        fontSize: 50,
+    },
+    input: {
+        height: 200,
+        width: 400,
+        margin: 12,
+        borderWidth: 1,
+        padding: 0,
     }
+}
 )
 export default NOTE;
