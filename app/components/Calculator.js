@@ -4,8 +4,8 @@ import {
     Text,
     View,
     TouchableOpacity,
+    Alert,
 } from 'react-native';
-import { StackNavigator } from 'react-navigation';
 const Button = (props) => (
     <TouchableOpacity
         onPress={props.onPress}>
@@ -14,7 +14,7 @@ const Button = (props) => (
         </View>
     </TouchableOpacity>
 )
-class App2 extends React.Component {
+class Calculator extends React.Component {
     constructor(props) {
         super(props);
         this.onPress = this.onPress.bind(this);
@@ -22,8 +22,11 @@ class App2 extends React.Component {
             fomula: "",
             performan:"",
             ans: "",
-            code:"6666",   
+            code:"6666",
+            modifiable: true,
+            show: true,
         }
+        this.show = true
         // const {navigate}  = this.props.navigation;
     }
     onPress(op, op2) {
@@ -36,9 +39,23 @@ class App2 extends React.Component {
             fomula: tempt2,
         })
     }
+    showAlert(){
+        Alert.alert(
+            "Notice",
+            "Input a password and press AC to enter."
+        )
+    }
     render() {
+        if (this.state.modifiable === true && this.show === true){
+            this.showAlert();
+            this.show = false
+        }
         return (
             <View style={styles.interface}>
+                {/*<Button*/}
+                {/*    onPress={() => this.setState({code: "1111"})}*/}
+                {/*/>*/}
+
                 <View style={styles.inputcontainer}>
                     <Text style={styles.InputText}>
                         计算器
@@ -62,9 +79,11 @@ class App2 extends React.Component {
                         style={styles.ButtonContainer}
                         onPress={() => {
                             this.setState({
+                                code: this.state.modifiable?this.state.fomula:this.state.code,
                                 fomula:"",
                                 performan:"",
                                 ans:"",
+                                modifiable: false,
                             })
                         }}
                     />
@@ -91,7 +110,9 @@ class App2 extends React.Component {
                     <Button
                         op={"%"}
                         style={styles.ButtonContainer}
-                        onPress={() => this.onPress("%", "%")}
+                        onPress={() => {
+                            this.onPress("%", "%")
+                        }}
                     />
                     <Button
                         op={"÷"}
@@ -190,7 +211,7 @@ class App2 extends React.Component {
                             // console.log(tempt);
                             if(tempt.toString() === this.state.code){
                                 console.log("get code!!");
-                                return this.props.navigation.navigate("Inner");
+                                return this.props.navigation.navigate("Menu");
                                 // this.props.navigation.navigate("Inner");
                                 
                             }
@@ -284,4 +305,4 @@ const styles = StyleSheet.create({
         color: "black",
     }
 });
-export default App2;
+export default Calculator;

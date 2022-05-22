@@ -93,7 +93,7 @@ const Menu = ({ navigation }) => {
         <View style={{ flex: 1 }}>
             <View style={{flexDirection:"row"}}>
                 <Button
-                    onPress={() => navigation.navigate('Outer')}
+                    onPress={() => navigation.navigate('Calculator')}
                     content={"<="}
                     viewstyle ={styles.BackButton}
                     textstyle ={styles.ButtonText} 
