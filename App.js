@@ -7,6 +7,7 @@ import NOTE from "./app/components/file";
 import App2 from "./app/components/Calculator";
 import Menu from "./app/components/menu";
 import RNFS from "react-native-fs";
+import Password from "./app/components/Password";
 import {useState} from "react";
 
 function OuterScreen({ navigation }) {
@@ -31,6 +32,12 @@ function InnerScreen({ navigation }) {
         />
     );
 }
+function PassScreen({ navigation }) {
+    return(
+        <Password navigation = {navigation}/>
+    )
+}
+
 function DetailsScreen({ route, navigation }) {
     const [text, Settext] = useState("")
     console.log(route.params.path)
@@ -53,7 +60,8 @@ const Tab = createBottomTabNavigator();
 export default function App() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Inner">
+            <Stack.Navigator initialRouteName="Password">
+                <Stack.Screen name="Password" component={PassScreen}/>
                 <Stack.Screen name="Outer" component={OuterScreen} />
                 <Stack.Screen name="Inner" component={InnerScreen} />
                 <Stack.Screen name="Diary" component={DiaryScreen} />
