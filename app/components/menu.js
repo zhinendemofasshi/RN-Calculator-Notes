@@ -6,6 +6,8 @@ import {
     FlatList,
     TouchableOpacity,
     Dimensions,
+    ImageBackground,
+    Image,
 } from 'react-native';
 import RNFS from "react-native-fs";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -92,9 +94,14 @@ function Menu({ route, navigation }) {
             name={index.toString()}
         />
     )
+    const image = { uri: "https://c-ssl.duitang.com/uploads/blog/202102/25/20210225145546_3d5eb.jpeg" }
 
     return (
+
         <View style={{ flex: 1 }}>
+            <ImageBackground style={{flex: 1}}
+                   source={image}
+            >
             <View style={{ flexDirection: "row" }}>
                 <Button
                     // onPress={() => navigation.navigate('Outer')}
@@ -119,6 +126,7 @@ function Menu({ route, navigation }) {
                     renderItem={renderItem}
                 />
             </View>
+            </ImageBackground>
         </View>
     )
 }
