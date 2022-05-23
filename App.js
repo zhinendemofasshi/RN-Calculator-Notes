@@ -3,7 +3,7 @@ import { Text, View} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator } from "@react-navigation/native-stack";
-import NOTE from "./app/components/file_the_right_one";
+import NOTE from "./app/components/file";
 import App2 from "./app/components/Calculator";
 import Menu from "./app/components/menu";
 function OuterScreen({ navigation }) {
@@ -35,8 +35,8 @@ const Tab = createBottomTabNavigator();
 export default function App() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Outer">
-                <Stack.Screen name="Outer" component={OuterScreen} />
+            <Stack.Navigator initialRouteName="Calculator">
+                <Stack.Screen name="Calculator" component={OuterScreen} />
                 <Stack.Screen name="Inner" component={InnerScreen} />
                 <Stack.Screen name="Diary" component={DiaryScreen} />
             </Stack.Navigator>
