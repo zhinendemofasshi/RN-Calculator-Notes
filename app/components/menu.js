@@ -7,12 +7,13 @@ import {
     TouchableOpacity,
     Dimensions,
     ImageBackground,
-    Image,
+    StatusBar
 } from 'react-native';
 import RNFS from "react-native-fs";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const Button_width = Dimensions.get('window').width / 2;
 const Item_height = Dimensions.get('window').height / 12;
+const image = { uri: "https://img2.baidu.com/it/u=3022743091,1016858746&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=1083" };
 const Button = (props) => (
     <TouchableOpacity
         onPress={props.onPress}>
@@ -47,7 +48,7 @@ function Menu({ route, navigation }) {
     const [item, setitem] = useState(ITEM);
     const [num, setnum] = useState(NUM);
     const _create = (num) => {
-        //according to the num to create a txt file and return the created path 
+        //according to the num to create a txt file and return the created path
         RNFS.mkdir(RNFS.DocumentDirectoryPath + "/mydata");
         let path_now = RNFS.DocumentDirectoryPath + "/diary" + num.toString() + ".txt";
         RNFS.writeFile(path_now, "", 'utf8')
@@ -64,7 +65,7 @@ function Menu({ route, navigation }) {
             })
     }
     const Create_onPress = () => {
-        //the function will be called when we need to 
+        //the function will be called when we need to
         //create a item and turn to the page of diary content
         let path_cur = _create(num), x = num + 1;
         let tempt = item, target = path_cur;
@@ -83,6 +84,7 @@ function Menu({ route, navigation }) {
     }
     const renderItem = ({ item, index }) => (
         //will be rendered by flatlist conponent
+
         <ListRowElement
             onPress={() => {
                 console.log("Now is reading item:" + item);
@@ -93,39 +95,41 @@ function Menu({ route, navigation }) {
             textstyle={styles.ItemText}
             name={index.toString()}
         />
+
     )
-    const image = { uri: "https://c-ssl.duitang.com/uploads/blog/202102/25/20210225145546_3d5eb.jpeg" }
 
     return (
-
         <View style={{ flex: 1 }}>
-            <ImageBackground style={{flex: 1}}
-                   source={image}
-            >
-            <View style={{ flexDirection: "row" }}>
-                <Button
-                    // onPress={() => navigation.navigate('Outer')}
-                    content={" "}
-                    viewstyle={styles.BlankButton}
-                    textstyle={styles.ButtonText}
-                    // back to the calculator page
-                />
+            <ImageBackground source={image} style={styles.image}>
 
-                <Button
-                    onPress={Create_onPress}
-                    content={"+"}
-                    viewstyle={styles.AddButton}
-                    textstyle={styles.ButtonText}
-                    // create a new diary
-                />
+                <View style={{ flexDirection: "row" }}>
 
-            </View>
-            <View>
-                <FlatList
-                    data={item}
-                    renderItem={renderItem}
-                />
-            </View>
+                    <Button
+                        // onPress={() => navigation.navigate('Outer')}
+                        content={" "}
+                        viewstyle={styles.BlankButton}
+                        textstyle={styles.ButtonText}
+                        // back to the calculator page
+                    />
+
+                    <Button
+                        onPress={Create_onPress}
+                        content={"+"}
+                        viewstyle={styles.AddButton}
+                        textstyle={styles.ButtonText}
+                        // create a new diary
+                    />
+
+                </View>
+                <View style={styles.note}>
+                    <FlatList
+                        numColumns={1}
+                        data={item}
+                        renderItem={renderItem}
+
+                    />
+
+                </View>
             </ImageBackground>
         </View>
     )
@@ -142,6 +146,7 @@ const styles = StyleSheet.create({
         BlankButton: {
             // flex:1,
             height: 70,
+
             width: Button_width * 1.5,
             // right:0,
         },
@@ -150,20 +155,38 @@ const styles = StyleSheet.create({
             left: Button_width * 3 / 10,
             height: 70,
             width: Button_width,
+
         },
         ButtonText: {
             flex: 1,
             fontSize: Button_width / 5,
+
         },
         RowItem: {
-            flex: 1,
-            height: Item_height,
-            borderColor: "black",
+            padding: 20,
+            marginVertical: 8,
+            marginHorizontal: 16,
+            backgroundColor: '#ffebcd',
+            alignItems:"center",
+            borderWidth:1,
+
+
 
         },
         ItemText: {
-            fontSize: Item_height * 4 / 5,
+            fontSize: 30,
 
+
+        },
+        note:{
+            flex: 1,
+            marginTop: StatusBar.currentHeight || 0,
+
+        },
+        image: {
+            flex: 1,
+            resizeMode: "cover",
+            justifyContent: "center"
         },
     }
 )
