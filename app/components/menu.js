@@ -97,9 +97,9 @@ function Menu({ route, navigation }) {
         <View style={{ flex: 1 }}>
             <View style={{ flexDirection: "row" }}>
                 <Button
-                    onPress={() => navigation.navigate('Outer')}
-                    content={"<="}
-                    viewstyle={styles.BackButton}
+                    // onPress={() => navigation.navigate('Outer')}
+                    content={" "}
+                    viewstyle={styles.BlankButton}
                     textstyle={styles.ButtonText}
                 // back to the calculator page
                 />
@@ -131,15 +131,15 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 0,
     },
-    BackButton: {
+    BlankButton: {
         // flex:1,
         height: 70,
-        width: Button_width,
+        width: Button_width * 1.5,
         // right:0,  
     },
     AddButton: {
         // flex:1,
-        left: Button_width * 4 / 5,
+        left: Button_width * 3 / 10,
         height: 70,
         width: Button_width,
     },
