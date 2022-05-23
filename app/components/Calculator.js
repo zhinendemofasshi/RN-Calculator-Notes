@@ -68,20 +68,38 @@ class App2 extends React.Component {
 
     render() {
         const GoNextPage = async () => {
-            const value = await AsyncStorage.getItem("NUM");
+            var value = await AsyncStorage.getItem("NUM");
+            console.log(parseInt(value));
+            var flag = 0;
             var arr = [];
-            console.log("NUM : " + value);
-            for (var i = 0; i < value; i++) {
+            for (var i = 0; i < parseInt(value); i++) {
+                flag = 1;
                 const now = await AsyncStorage.getItem(i.toString());
                 arr.push(now);
                 console.log(now);
             }
+            if(!flag){
+                console.log("Num be created by 0!");
+                this.storeData("NUM", "0");
+                value = '0'; 
+            }
+            console.log("NUM : " + value);
             this.props.navigation.navigate("Inner", {
                 NUM: parseInt(value),
                 ITEM: arr,
             });
             console.log("GET NUM:" + value);
+
         }
+        const clearAll = async () => {
+            try {
+              await AsyncStorage.clear()
+            } catch(e) {
+              // clear error
+            }
+          
+            console.log('Done.')
+          }          
         return (
             <View style={styles.interface}>
                 <View style={styles.inputcontainer}>
@@ -233,6 +251,7 @@ class App2 extends React.Component {
                             if (this.state.fomula !== "" && tempt.toString() === this.state.code) {
                                 console.log("get code!!");
                                 GoNextPage();
+                                // clearAll();
                                 // AsyncStorage.getItem("NUM")
                                 //     .then(value => {
                                 //         this.props.navigation.navigate("Inner", {
