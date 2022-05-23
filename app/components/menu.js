@@ -97,11 +97,11 @@ function Menu({ route, navigation }) {
         <View style={{ flex: 1 }}>
             <View style={{ flexDirection: "row" }}>
                 <Button
-                    onPress={() => navigation.navigate('Outer')}
-                    content={"<="}
-                    viewstyle={styles.BackButton}
+                    // onPress={() => navigation.navigate('Outer')}
+                    content={" "}
+                    viewstyle={styles.BlankButton}
                     textstyle={styles.ButtonText}
-                // back to the calculator page
+                    // back to the calculator page
                 />
 
                 <Button
@@ -109,7 +109,7 @@ function Menu({ route, navigation }) {
                     content={"+"}
                     viewstyle={styles.AddButton}
                     textstyle={styles.ButtonText}
-                // create a new diary
+                    // create a new diary
                 />
 
             </View>
@@ -123,41 +123,41 @@ function Menu({ route, navigation }) {
     )
 }
 const styles = StyleSheet.create({
-    input: {
-        flex: 1,
-        height: 200,
-        width: 400,
-        margin: 12,
-        borderWidth: 1,
-        padding: 0,
-    },
-    BackButton: {
-        // flex:1,
-        height: 70,
-        width: Button_width,
-        // right:0,  
-    },
-    AddButton: {
-        // flex:1,
-        left: Button_width * 4 / 5,
-        height: 70,
-        width: Button_width,
-    },
-    ButtonText: {
-        flex: 1,
-        fontSize: Button_width / 5,
-    },
-    RowItem: {
-        flex: 1,
-        height: Item_height,
-        borderColor: "black",
+        input: {
+            flex: 1,
+            height: 200,
+            width: 400,
+            margin: 12,
+            borderWidth: 1,
+            padding: 0,
+        },
+        BlankButton: {
+            // flex:1,
+            height: 70,
+            width: Button_width * 1.5,
+            // right:0,
+        },
+        AddButton: {
+            // flex:1,
+            left: Button_width * 3 / 10,
+            height: 70,
+            width: Button_width,
+        },
+        ButtonText: {
+            flex: 1,
+            fontSize: Button_width / 5,
+        },
+        RowItem: {
+            flex: 1,
+            height: Item_height,
+            borderColor: "black",
 
-    },
-    ItemText: {
-        fontSize: Item_height * 4 / 5,
+        },
+        ItemText: {
+            fontSize: Item_height * 4 / 5,
 
-    },
-}
+        },
+    }
 )
 
 export default Menu;

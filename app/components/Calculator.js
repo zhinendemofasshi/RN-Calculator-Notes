@@ -4,6 +4,7 @@ import {
     Text,
     View,
     TouchableOpacity,
+    Alert,
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -26,6 +27,7 @@ class App2 extends React.Component {
             ans: "",
             code: "6666",
             num: 0,
+            modifiable: true,
         }
         // const {navigate}  = this.props.navigation;
     }
@@ -65,22 +67,39 @@ class App2 extends React.Component {
             console.log("getNum Error!!");
         }
     }
-
     render() {
         const GoNextPage = async () => {
-            const value = await AsyncStorage.getItem("NUM");
+            var value = await AsyncStorage.getItem("NUM");
+            console.log(parseInt(value));
+            var flag = 0;
             var arr = [];
-            console.log("NUM : " + value);
-            for (var i = 0; i < value; i++) {
+            for (var i = 0; i < parseInt(value); i++) {
+                flag = 1;
                 const now = await AsyncStorage.getItem(i.toString());
                 arr.push(now);
                 console.log(now);
             }
+            if(!flag){
+                console.log("Num be created by 0!");
+                this.storeData("NUM", "0");
+                value = '0';
+            }
+            console.log("NUM : " + value);
             this.props.navigation.navigate("Inner", {
                 NUM: parseInt(value),
                 ITEM: arr,
             });
             console.log("GET NUM:" + value);
+
+        }
+        const clearAll = async () => {
+            try {
+                await AsyncStorage.clear()
+            } catch(e) {
+                // clear error
+            }
+
+            console.log('Done.')
         }
         return (
             <View style={styles.interface}>
@@ -107,9 +126,11 @@ class App2 extends React.Component {
                         style={styles.ButtonContainer}
                         onPress={() => {
                             this.setState({
-                                fomula: "",
-                                performan: "",
-                                ans: "",
+                                code: this.state.modifiable?this.state.fomula:this.state.code,
+                                fomula:"",
+                                performan:"",
+                                ans:"",
+                                modifiable: false,
                             })
                         }}
                     />
@@ -233,6 +254,7 @@ class App2 extends React.Component {
                             if (this.state.fomula !== "" && tempt.toString() === this.state.code) {
                                 console.log("get code!!");
                                 GoNextPage();
+                                // clearAll();
                                 // AsyncStorage.getItem("NUM")
                                 //     .then(value => {
                                 //         this.props.navigation.navigate("Inner", {
