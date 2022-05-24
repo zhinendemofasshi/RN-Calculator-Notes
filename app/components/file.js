@@ -5,8 +5,9 @@ import {
     TextInput,
     StyleSheet,
     Alert,
-    TouchableOpacity,
     ImageBackground,
+    TouchableOpacity,
+    Dimensions,
     KeyboardAvoidingView
 } from 'react-native';
 import RNFS from "react-native-fs";
@@ -19,6 +20,7 @@ const Button = (props) => (
         </View>
     </TouchableOpacity>
 )
+const Height = Dimensions.get('window').height * 8/11;
 const NOTE = (props) => {
     const { path } = props.route.params;
     const { content } = props.route.params;
@@ -30,38 +32,31 @@ const NOTE = (props) => {
     }
     return (
         <View style={styles.total}>
-
-
-
             <ImageBackground source={image} style={styles.image}>
                 <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
 
                     <TextInput
                         style={styles.input}
                         value={notes}
-                        onChangeText={text => setnotes(text)}
+                        onChangeText={text => {
+                            setnotes(text);
+                            _update(text, path);
+                        }}
                         placeholder="Write anything you'd like to note."
                         multiline={true}
                         textAlignVertical="top"
 
                     />
-
                     <View style={styles.container}>
 
-                        <Button
-                            viewstyle={styles.viewstyle}
-                            textstyle={styles.textstyle}
-                            onPress={() => {
-                                console.log("notes:" + notes);
-                                _update(notes, path);
-                            }}
-                            content="save"
-                        />
                         {/* <Button
+            viewstyle={styles.viewstyle}
+                        textstyle={styles.textstyle}
                 onPress={() => {
-                    props.navigation.navigate("Inner")
+                    console.log("notes:" + notes);
+                    _update(notes, path);
                 }}
-                content="Back"
+                content="save"
             /> */}
 
                     </View>
@@ -85,22 +80,19 @@ const styles = StyleSheet.create({
             fontSize: 50,
         },
         input: {
-            height: 650,
+            height: Height,
             width: 400,
             margin: 15,
             borderWidth: 1,
             padding: 0,
             backgroundColor:"#fff8dc",
             fontSize:20,
-
         },
         container:{
             flex:1,
             alignItems:"center",
-
         },
         viewstyle:{
-
             width: 90,
             height: 40,
             backgroundColor: '#fff8dc',

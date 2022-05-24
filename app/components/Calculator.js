@@ -92,15 +92,7 @@ class App2 extends React.Component {
             console.log("GET NUM:" + value);
 
         }
-        const clearAll = async () => {
-            try {
-                await AsyncStorage.clear()
-            } catch(e) {
-                // clear error
-            }
 
-            console.log('Done.')
-        }
         return (
             <View style={styles.interface}>
                 <View style={styles.inputcontainer}>
@@ -111,10 +103,6 @@ class App2 extends React.Component {
                         {this.state.performan}
                     </Text>
                 </View>
-                {/* <Text style={styles.inputcontainer}>
-                    {this.state.fomula}
-
-                </Text> */}
                 <View style={styles.OutputContainer}>
                     <Text style={styles.OutputText}>
                         {this.state.ans}

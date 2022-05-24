@@ -34,12 +34,21 @@ const ListRowElement = (props) => {
 }
 
 function Menu({ route, navigation }) {
-    const {NUM} = route.params;
-    const {ITEM} = route.params;
+    const clearAll = async () => {
+        try {
+            await AsyncStorage.clear()
+        } catch(e) {
+            // clear error
+        }
+
+        console.log('Done.')
+    }
+    const { NUM } = route.params;
+    const { ITEM } = route.params;
     const storeData = async (key, value) => {
         try {
             await AsyncStorage.setItem(key, value);
-            console.log("NOW IS STORING " + key  + " is " + value);
+            console.log("NOW IS STORING " + key + " is " + value);
         } catch (e) {
             // saving error
             console.log("StoreItem Error!!!");
@@ -84,7 +93,6 @@ function Menu({ route, navigation }) {
     }
     const renderItem = ({ item, index }) => (
         //will be rendered by flatlist conponent
-
         <ListRowElement
             onPress={() => {
                 console.log("Now is reading item:" + item);
@@ -93,17 +101,25 @@ function Menu({ route, navigation }) {
             }}//click to show the content of the diary
             viewstyle={styles.RowItem}
             textstyle={styles.ItemText}
-            name={index.toString()}
+            name={"diary"+ index.toString()}
         />
-
     )
-
     return (
         <View style={{ flex: 1 }}>
             <ImageBackground source={image} style={styles.image}>
-
                 <View style={{ flexDirection: "row" }}>
-
+                    <Button
+                        // onPress={() => navigation.navigate('Outer')}
+                        content={"clear"}
+                        viewstyle={styles.ClearButton}
+                        textstyle={styles.ButtonText}
+                        onPress={()=>{
+                            clearAll();
+                            setitem([]);
+                            setnum(0);
+                        }}
+                        // back to the calculator page
+                    />
                     <Button
                         // onPress={() => navigation.navigate('Outer')}
                         content={" "}
@@ -119,14 +135,12 @@ function Menu({ route, navigation }) {
                         textstyle={styles.ButtonText}
                         // create a new diary
                     />
-
                 </View>
                 <View style={styles.note}>
                     <FlatList
                         numColumns={1}
                         data={item}
                         renderItem={renderItem}
-
                     />
 
                 </View>
@@ -143,11 +157,16 @@ const styles = StyleSheet.create({
             borderWidth: 1,
             padding: 0,
         },
+        ClearButton:{
+            height: 70,
+            width: Button_width,
+            left:0,
+        },
         BlankButton: {
             // flex:1,
             height: 70,
 
-            width: Button_width * 1.5,
+            width: Button_width /2,
             // right:0,
         },
         AddButton: {
@@ -167,18 +186,13 @@ const styles = StyleSheet.create({
             marginVertical: 8,
             marginHorizontal: 16,
             backgroundColor: '#ffebcd',
-            alignItems:"center",
-            borderWidth:1,
-
-
-
+            alignItems: "center",
+            borderWidth: 1,
         },
         ItemText: {
             fontSize: 30,
-
-
         },
-        note:{
+        note: {
             flex: 1,
             marginTop: StatusBar.currentHeight || 0,
 
